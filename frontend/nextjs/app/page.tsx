@@ -52,7 +52,8 @@ export default function Home() {
     setAnswer,
     setLoading,
     setShowHumanFeedback,
-    setQuestionForHuman
+    setQuestionForHuman,
+    "http://10.140.79.18:80"
   );
 
   const handleFeedbackSubmit = (feedback: string | null) => {
