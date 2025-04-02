@@ -54,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./frontend/nextjs
-          file: ./frontend/nextjs/Dockerfile
+          file: ./Dockerfile
           push: true
           tags: ghcr.io/ai-cfia/gpt-researcher-frontend-prod:latest
       
@@ -62,6 +62,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./frontend/nextjs
-          file: ./frontend/nextjs/Dockerfile.dev
+          file: ./Dockerfile.dev
           push: true
           tags: ghcr.io/ai-cfia/gpt-researcher-frontend-dev:latest
