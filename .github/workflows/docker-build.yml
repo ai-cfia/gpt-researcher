@@ -1,24 +1,20 @@
-name: GPTR tests
-run-name: ${{ github.actor }} ran the GPTR tests flow
+name: GPT researcher build and push image
+
 permissions:
   contents: read
   pull-requests: write
+  packages: write
+
 on:
-  workflow_dispatch:  # Add this line to enable manual triggering
-  # pull_request:
-  #   types: [opened, synchronize]
+  pull_request:
+    types: [opened, closed, synchronize]
 
 jobs:
   docker:
     runs-on: ubuntu-latest
-    environment: tests  # Specify the environment to use for this job
-    env:
-      # Ensure these environment variables are set for the entire job
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
-      LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+    environment: tests
     steps:
-      - name: Git checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up QEMU
@@ -29,17 +25,25 @@ jobs:
         with:
           driver: docker
 
-      # - name: Build Docker images
-      #   uses: docker/build-push-action@v4
-      #   with:
-      #     push: false
-      #     tags: gptresearcher/gpt-researcher:latest
-      #     file: Dockerfile          
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-      - name: Run tests with Docker Compose
-        run: |
-          docker-compose --profile test run --rm gpt-researcher-tests
+      - name: Build & Push main image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/ai-cfia/gpt-researcher:latest
+
+      - name: Build & Push frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend/nextjs
+          file: ./frontend/nextjs/Dockerfile
+          push: true
+          tags: ghcr.io/ai-cfia/gpt-researcher-frontend:latest
