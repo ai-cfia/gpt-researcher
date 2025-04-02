@@ -50,10 +50,18 @@ jobs:
           push: true
           tags: ghcr.io/ai-cfia/gpt-researcher:latest
 
-      - name: Build & Push frontend image
+      - name: Build & Push frontend (prod) image
         uses: docker/build-push-action@v4
         with:
           context: ./frontend/nextjs
           file: ./frontend/nextjs/Dockerfile
           push: true
-          tags: ghcr.io/ai-cfia/gpt-researcher-frontend:latest
+          tags: ghcr.io/ai-cfia/gpt-researcher-frontend-prod:latest
+      
+      - name: Build & Push frontend (dev) image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend/nextjs
+          file: ./frontend/nextjs/Dockerfile.dev
+          push: true
+          tags: ghcr.io/ai-cfia/gpt-researcher-frontend-dev:latest
