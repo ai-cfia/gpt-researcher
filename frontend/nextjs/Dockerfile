@@ -1,6 +1,6 @@
 FROM node:18.17.0-alpine as builder
 
-ENV NEXT_PUBLIC_GPTR_API_URL=http://gptr-b.inspection.alpha.canada.ca:80
+ENV NEXT_PUBLIC_GPTR_API_URL=https://gptr-b.inspection.alpha.canada.ca
 
 WORKDIR /app
 COPY ./package.json ./
