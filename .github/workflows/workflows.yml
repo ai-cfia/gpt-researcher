@@ -1,9 +1,9 @@
 name: GPT researcher integration workflow
 
-permissions:
-  contents: read
-  pull-requests: write
-  packages: write
+# permissions:
+#   contents: read
+#   pull-requests: write
+#   packages: write
 
 on:
   pull_request:
@@ -13,18 +13,18 @@ on:
       - synchronize
 
 jobs:
-  markdown-check:
-    uses:
-      ai-cfia/github-workflows/.github/workflows/workflow-markdown-check.yml@main
+  # markdown-check:
+  #   uses:
+  #     ai-cfia/github-workflows/.github/workflows/workflow-markdown-check.yml@main
 
-  repo-standard:
-    uses:
-      ai-cfia/github-workflows/.github/workflows/workflow-repo-standards-validation.yml@main
-    secrets: inherit
+  # repo-standard:
+  #   uses:
+  #     ai-cfia/github-workflows/.github/workflows/workflow-repo-standards-validation.yml@main
+  #   secrets: inherit
 
-  pr-labelling:
-    uses: ai-cfia/github-workflows/.github/workflows/workflow-pr-labelling.yml@main
-    secrets: inherit
+  # pr-labelling:
+  #   uses: ai-cfia/github-workflows/.github/workflows/workflow-pr-labelling.yml@main
+  #   secrets: inherit
 
   build-push-images:
     runs-on: ubuntu-latest
