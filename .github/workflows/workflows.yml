@@ -1,5 +1,10 @@
 name: GPT researcher integration workflow
 
+permissions:
+  contents: read
+  pull-requests: write
+  packages: write
+
 on:
   pull_request:
     types:
@@ -21,6 +26,40 @@ jobs:
     uses: ai-cfia/github-workflows/.github/workflows/workflow-pr-labelling.yml@main
     secrets: inherit
 
-  check-commit-author:
-    uses: ai-cfia/github-workflows/.github/workflows/workflow-check-author-email.yml@main
-    secrets: inherit
+  build-push-images:
+    runs-on: ubuntu-latest
+    environment: tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver: docker
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push backend image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/ai-cfia/gpt-researcher:latest
+
+      - name: Build & Push frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend/nextjs
+          file: ./frontend/nextjs/Dockerfile
+          push: true
+          tags: ghcr.io/ai-cfia/gpt-researcher-frontend:latest
