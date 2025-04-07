@@ -53,7 +53,7 @@ export default function Home() {
     setLoading,
     setShowHumanFeedback,
     setQuestionForHuman,
-    "http://10.140.79.18:80"
+    "gptr-b.inspection.alpha.canada.ca" // not used anyway
   );
 
   const handleFeedbackSubmit = (feedback: string | null) => {
