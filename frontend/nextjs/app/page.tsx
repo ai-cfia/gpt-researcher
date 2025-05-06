@@ -52,8 +52,7 @@ export default function Home() {
     setAnswer,
     setLoading,
     setShowHumanFeedback,
-    setQuestionForHuman,
-    "gptr-b.inspection.alpha.canada.ca" // not used anyway
+    setQuestionForHuman
   );
 
   const handleFeedbackSubmit = (feedback: string | null) => {
